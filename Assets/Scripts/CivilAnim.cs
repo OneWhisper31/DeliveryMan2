@@ -20,7 +20,7 @@ public class CivilAnim : MonoBehaviour
 
     private void Update() {
         anim.SetBool("Idle",ia.isWaiting);
-        Vector3 dir=new Vector3(ia.location.x,ia.location.y,0)-transform.position;
+        Vector3 dir=new Vector3(ia.destination.x,ia.destination.y,0)-transform.position;
         angleTowardsLocation= Mathf.Atan2(dir.y,dir.x)*Mathf.Rad2Deg;
         GetComponent<Rigidbody2D>().rotation=Mathf.Lerp(rb.rotation,angleTowardsLocation,0.2f);
     }

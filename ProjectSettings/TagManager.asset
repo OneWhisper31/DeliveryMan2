@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Wall
   - Civil
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Civil
   - Water
   - UI
   - 

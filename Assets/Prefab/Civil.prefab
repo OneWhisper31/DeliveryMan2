@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3161071687543286100}
   - component: {fileID: 3161071687543286091}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3161071688327943165}
   m_RootOrder: 0
@@ -42,6 +43,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -93,12 +95,12 @@ GameObject:
   - component: {fileID: 3161071688327943165}
   - component: {fileID: 3161071688327943152}
   - component: {fileID: 3161071688327943164}
-  - component: {fileID: 3161071688327943154}
-  - component: {fileID: 3161071688327943153}
+  - component: {fileID: 5104998538506606892}
+  - component: {fileID: 967389623771828661}
   - component: {fileID: 3161071688327943159}
   - component: {fileID: 3161071688327943155}
   - component: {fileID: 2044846810044304783}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Civil
   m_TagString: Civil
   m_Icon: {fileID: 0}
@@ -115,6 +117,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 2.65637, y: 2.65637, z: 2.65637}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3161071687543286100}
   m_Father: {fileID: 0}
@@ -122,7 +125,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &3161071688327943152
 Animator:
-  serializedVersion: 3
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -135,6 +138,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -159,9 +163,9 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!61 &3161071688327943154
-BoxCollider2D:
+  m_Constraints: 4
+--- !u!58 &5104998538506606892
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -173,21 +177,11 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0036669672, y: -0.0034235418}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.87, y: 0.8}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: 0.58893174, y: 0.8811515}
-  m_EdgeRadius: 0
---- !u!61 &3161071688327943153
-BoxCollider2D:
+  m_Radius: 0.3
+--- !u!58 &967389623771828661
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -199,19 +193,9 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0036669672, y: -0.0034235418}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.87, y: 0.8}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: 0.58893174, y: 0.8811515}
-  m_EdgeRadius: 0
+  m_Radius: 0.2
 --- !u!114 &3161071688327943159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,7 +222,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bloodParticle: {fileID: 2689405620682841036, guid: 4c6af8d201813f948aa2b1dafe222218, type: 3}
   counter: {fileID: 0}
-  location: {x: 0, y: 0}
+  speed: 7
+  maxTimeDes: 7
+  destination: {x: 0, y: 0, z: 0}
   isWaiting: 0
 --- !u!114 &2044846810044304783
 MonoBehaviour:
