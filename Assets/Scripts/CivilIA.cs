@@ -87,7 +87,9 @@ namespace Civil
             if (other.tag == "Player")
             {
                 Instantiate(bloodParticle, transform.position, transform.rotation);
-                counter.SubstractSecs(5);
+                //counter.SubstractSecs(5);
+                CivilSpawner.civilSpawner.spawn--;
+                CivilSpawner.civilSpawner.peopleDied++;
                 Destroy(this.gameObject);
             }
             else if ((other.tag == "Wall")&&!isWaiting)
@@ -101,7 +103,11 @@ namespace Civil
             if((other.tag == "Wall"))
             {/*in case it get stuck, destroy*/
                 currentTimeDes -= Time.deltaTime;
-                if (currentTimeDes <= 0) Destroy(this.gameObject);
+                if (currentTimeDes <= 0)
+                {
+                    Destroy(this.gameObject);
+                    CivilSpawner.civilSpawner.spawn--;
+                }
             }
         }
     }

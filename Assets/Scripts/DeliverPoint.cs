@@ -9,7 +9,7 @@ public class DeliverPoint : MonoBehaviour
     public UnityEvent pickedUpNR;
 
     bool isActive=true;
-    bool isreal;
+    bool isreal =true;
     float cooldown;
 
     Collider2D boxColl;
@@ -55,7 +55,7 @@ public class DeliverPoint : MonoBehaviour
         isActive=active;
     }
     void IsReal(){//handles whenever is real or not 20% isnot real 80% is real
-        if(Random.Range(1,101)<=20) isreal=false;
-        else isreal=true;
+        /*if(Random.Range(1,101)<=20) isreal=false;
+        else isreal=true;*/
     }
 }
