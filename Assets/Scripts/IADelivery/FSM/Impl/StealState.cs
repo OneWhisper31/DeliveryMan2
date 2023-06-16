@@ -27,7 +27,12 @@ namespace FSM
 
         public override IState ProcessInput()
         {
-            return this;
+            Vector2 futurePos = (Vector2)playerRb.transform.position + playerRb.velocity;
+
+            if ((futurePos - (Vector2)transform.position).magnitude< 2 && Transitions.ContainsKey("OnCompleteDeliveryState"))
+                return Transitions["OnCompleteDeliveryState"];
+
+                return this;
         }
     }
 }

@@ -24,7 +24,7 @@ namespace FSM
             bool InFieldOfView = Physics2DExtension.InFieldOfView(transform.position, carIA.player.transform.position,
                                                  carIA.viewRadiusPlayer, carIA.viewAnglePlayer, carIA.wallLayer);
 
-            //IA2 - TP1
+            //IA2-P1
             bool InLineOfSight = carIA.delivers.Any(x=>x.isActive==true)?
                 Physics2DExtension.InLineOfSight(transform.position, 
                 carIA.delivers.Where(x=>x.isActive==true)

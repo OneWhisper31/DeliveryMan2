@@ -32,7 +32,7 @@ public class DeliverPoint : MonoBehaviour
         boxColl=GetComponent<Collider2D>();
         boxSprite=GetComponent<SpriteRenderer>();
         cooldown=Random.Range(20,41);
-        isActive = false;
+        isActive = true;
         /*if(Random.Range(1,101)<=40){//60% iniciate visible 40% not
             IsReal();
         }

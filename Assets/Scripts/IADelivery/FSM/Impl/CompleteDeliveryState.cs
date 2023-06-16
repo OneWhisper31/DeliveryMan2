@@ -17,7 +17,8 @@ namespace FSM
 
         public override void UpdateLoop()
         {
-
+            //sumar un punto y replantear estrategia
+            Debug.Log("God,No?");
         }
 
         public override IState ProcessInput()

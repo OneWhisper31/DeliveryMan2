@@ -10,7 +10,7 @@ public class CarIA : MonoBehaviour
 {
 
     #region Variables
-    [Header("States")]
+    [Header("States")] //IA2-P3
     [SerializeField] IdleState             idleState;
     [SerializeField] SeekState             seekState;
     [SerializeField] AStarState            AStarState;
@@ -39,8 +39,8 @@ public class CarIA : MonoBehaviour
     float rotationAngle;
     float velocityVsUp;
 
-   
 
+    //IA2-P3
     FiniteStateMachine _fsm;
     #endregion
 
@@ -53,7 +53,6 @@ public class CarIA : MonoBehaviour
     {
         myRb = GetComponent<Rigidbody2D>();
         PlanAndExecute();
-        Time.timeScale=0.1f;
     }
     private void PlanAndExecute()
     {
@@ -202,12 +201,10 @@ public class CarIA : MonoBehaviour
     {
         float angle = Vector3.Angle(input, transform.up);
 
-        Debug.Log(angle);
-
-        if (Mathf.Abs(angle) <= 30)
+        if (Mathf.Abs(angle) <= 20)
             steeringInput = 0;
         else
-            steeringInput = angle * 0.01f;
+            steeringInput = angle * 0.02f;
 
         steeringInput = (float)Math.Round(steeringInput, 3,MidpointRounding.ToEven);
 
