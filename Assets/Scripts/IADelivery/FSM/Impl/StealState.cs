@@ -29,7 +29,7 @@ namespace FSM
         {
             Vector2 futurePos = (Vector2)playerRb.transform.position + playerRb.velocity;
 
-            if ((futurePos - (Vector2)transform.position).magnitude< 2 && Transitions.ContainsKey("OnCompleteDeliveryState"))
+            if ((futurePos - (Vector2)transform.position).magnitude< 5 && Transitions.ContainsKey("OnCompleteDeliveryState"))
                 return Transitions["OnCompleteDeliveryState"];
 
                 return this;
