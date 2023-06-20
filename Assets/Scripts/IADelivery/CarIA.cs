@@ -54,7 +54,7 @@ public class CarIA : MonoBehaviour
         myRb = GetComponent<Rigidbody2D>();
         PlanAndExecute();
     }
-    private void PlanAndExecute()
+    public  void PlanAndExecute()
     {
         var actions = new List<GOAPAction>{
                                               new GOAPAction("Idle")
@@ -80,7 +80,7 @@ public class CarIA : MonoBehaviour
                                                  .Pre("isObjectiveInSight",   false)
                                                  .Pre("isPlayerInFOV",   false)
                                                  .Effect("objectiveAchieved", true)
-                                                 .Cost(3)
+                                                 .Cost(2)
                                                  .LinkedState(AStarState),
 
                                               new GOAPAction("CompleteDelivery")

@@ -84,7 +84,7 @@ namespace Civil
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.tag == "Player")
+            if (other.tag == "Player1"|| other.tag =="Player2")
             {
                 Instantiate(bloodParticle, transform.position, transform.rotation);
                 //counter.SubstractSecs(5);

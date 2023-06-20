@@ -6,19 +6,35 @@ using UnityEngine.Events;
 
 public class UICounter : MonoBehaviour
 {
+    public static UICounter intance;
+
+    public LayerMask wallMask;
 
     public int initialSecs;
 
     public TextMeshProUGUI gameOverScoreText;
 
     public TextMeshProUGUI timerText;
-    public TextMeshProUGUI scoreText;
 
     public UnityEvent GameOver;
 
     float miliSecCounter;
     int secondCounter;
-    int score;//ammount of orders delivers
+
+    public TextMeshProUGUI scoreText1;
+    public TextMeshProUGUI scoreText2;
+
+    int score1;//ammount of orders delivers Player1
+
+    int score2;//ammount of orders delivers Player2
+
+    private void Awake()
+    {
+        if (intance == null)
+            intance = this;
+        else
+            Destroy(this.gameObject);
+    }
 
     private void Start() {
         secondCounter=initialSecs;
@@ -42,14 +58,30 @@ public class UICounter : MonoBehaviour
         public void AddSecs(int add){
             secondCounter+=add;
         }
-        public void AddScore(){
-            score++;
-            scoreText.SetText(score.ToString());
+        public void AddScore(Player player=0){
+        switch (player)
+        {
+            case Player.One:
+                score1++;
+                scoreText1.SetText(score1.ToString());
+                break;
+            case Player.Two:
+                score2++;
+                scoreText2.SetText(score2.ToString());
+                break;
+            default:
+                break;
+        }
         }
         public void SubstractSecs(int substract){
             secondCounter-=substract;
         }
         public void SetScore(){
-            gameOverScoreText.SetText(score.ToString());
+            gameOverScoreText.SetText(score1.ToString());
         }            
+}
+public enum Player
+{
+    One,
+    Two
 }

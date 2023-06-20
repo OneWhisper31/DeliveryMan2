@@ -56,7 +56,8 @@ namespace FSM
         public override IState ProcessInput()
         {
 
-            if ((deliveryTarget - transform.position).magnitude < 2 && Transitions.ContainsKey("OnCompleteDeliveryState"))
+            if ((deliveryTarget - transform.position).magnitude < 2
+                && Transitions.ContainsKey("OnCompleteDeliveryState"))
                 return Transitions["OnCompleteDeliveryState"];
 
             return this;

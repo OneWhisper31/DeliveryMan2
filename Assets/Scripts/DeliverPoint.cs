@@ -5,14 +5,16 @@ using UnityEngine.Events;
 
 public class DeliverPoint : MonoBehaviour
 {
-    public UnityEvent pickedUpR;
-    public UnityEvent pickedUpNR;
 
-    bool isreal = true;
+    //bool isreal = true;
     float cooldown;
 
     Collider2D boxColl;
     SpriteRenderer boxSprite;
+
+
+    [SerializeField] AudioSource _audio;
+    [SerializeField] AudioClip _audioclip;
 
     bool _isActive;
     public bool isActive {
@@ -33,22 +35,19 @@ public class DeliverPoint : MonoBehaviour
         boxSprite=GetComponent<SpriteRenderer>();
         cooldown=Random.Range(20,41);
         isActive = true;
-        /*if(Random.Range(1,101)<=40){//60% iniciate visible 40% not
-            IsReal();
-        }
-        else{
-            isActive = false;
-        }
-        IsReal();*/
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        if(other.tag=="Player"){
-            if(isreal)
-                pickedUpR.Invoke();//add secs to counter and score(REAL)
-            else
-                pickedUpNR.Invoke();//iniciate animation(NOT REAL)
-            isActive=false;
+        if(other.tag=="Player1"){
+            _audio.PlayOneShot(_audioclip);
+            UICounter.intance.AddScore(Player.One);
+            isActive =false;
+        }
+        else if (other.tag == "Player2")
+        {
+            _audio.PlayOneShot(_audioclip);
+            UICounter.intance.AddScore(Player.Two);
+            isActive = false;
         }
     }
 
@@ -62,8 +61,4 @@ public class DeliverPoint : MonoBehaviour
             cooldown-=Time.deltaTime;
         }
     }
-    /*void IsReal(){//handles whenever is real or not 20% isnot real 80% is real
-        /*if(Random.Range(1,101)<=20) isreal=false;
-        else isreal=true;
-    }*/
-    }
+}

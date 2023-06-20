@@ -15,5 +15,4 @@ public class WeightedNode<T> {
         _element = element;
         _weight  = weight;
     }
-
 }

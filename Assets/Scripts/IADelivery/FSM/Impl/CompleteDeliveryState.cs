@@ -14,11 +14,15 @@ namespace FSM
             carIA = GetComponent<CarIA>();
         }
 
+        public override void Enter(IState from, Dictionary<string, object> transitionParameters = null)
+        {
+            base.Enter(from, transitionParameters);
+            carIA.PlanAndExecute();
+        }
 
         public override void UpdateLoop()
         {
-            //sumar un punto y replantear estrategia
-            Debug.Log("God,No?");
+            
         }
 
         public override IState ProcessInput()
