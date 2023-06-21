@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 public class NodeGrid : MonoBehaviour
 {
     [SerializeField] Node prefab;
+    [SerializeField] LayerMask wallMask;
+
+    [SerializeField] Node[] _nodes;//en orden horizontal
+
     Node[,] _grid;
 
     public int width;
     public int height;
 
-    void Start()
+    private void Awake()
     {
         CreateGrid();
     }
@@ -19,13 +22,21 @@ public class NodeGrid : MonoBehaviour
     void CreateGrid()
     {
         _grid = new Node[width, height];
+        _nodes = new Node[width * height];
 
         for (int x = 0; x < width; x++)
         {
+            int i = 0;
             for (int y = 0; y < height; y++)
             {
-                _grid[x, y] = Instantiate(prefab, new Vector2(transform.position.x + x * 5, transform.position.y + y * 5), transform.rotation, transform);
-                _grid[x, y].Initialize(this, new Vector2Int(x, y));
+                i = x  + y * width;
+                if (i < _nodes.Length)
+                {
+                    _grid[x, y] = Instantiate(prefab, new Vector2(transform.position.x + y * 15, transform.position.y + x * 15), transform.rotation, transform);
+                    _grid[x, y].Initialize(this, new Vector2Int(x, y));
+                    _grid[x, y].name = "Node-" + i;
+                    _nodes[i]= _grid[x, y];
+                }
             }
         }
     }
@@ -39,15 +50,12 @@ public class NodeGrid : MonoBehaviour
 
         if (x < width || y < height)
         {
-            mainPos = _grid[x, y].transform.position;
+            mainPos = _grid[x , y].transform.position;
         }
-
-
-        LayerMask wallMask = UICounter.intance.wallMask;
 
         if (x + 1 < width)
         {
-            if (_grid[x + 1, y] != null)
+            if (_grid[x +1 , y] != null)
             {
                 if (_grid[x + 1, y].locked == false)
                 {
@@ -61,9 +69,9 @@ public class NodeGrid : MonoBehaviour
 
         if (x - 1 >= 0)
         {
-            if (_grid[x - 1, y] != null)
+            if (_grid[x - 1 ,y] != null)
             {
-                if (_grid[x - 1, y].locked == false)
+                if (_grid[x - 1 , y].locked == false)
                 {
                     Vector3 endPos2 = _grid[x - 1, y].transform.position;
 
@@ -75,9 +83,9 @@ public class NodeGrid : MonoBehaviour
 
         if (y + 1 < height)
         {
-            if (_grid[x, y + 1] != null)
+            if (_grid[x,y+1] != null)
             {
-                if (_grid[x , y+1].locked == false)
+                if (_grid[x , y + 1].locked == false)
                 {
                     Vector3 endPos3 = _grid[x, y + 1].transform.position;
 
@@ -103,16 +111,16 @@ public class NodeGrid : MonoBehaviour
 
         return neighbors;
     }
-    public Node GetStartingNode(Vector2 pos)//devuelve el nodo mas cercano segun la pos
+    public Node GetStartingNode(Vector3 pos)//devuelve el nodo mas cercano segun la pos
     {
         float closestMagnitude = Mathf.Infinity;
         Node closestNode = null;
 
-        foreach (Node node in _grid)
+        foreach (Node node in _nodes)
         {
-            if (node == null) continue;
+            if (node == null||node.locked==true) continue;
 
-            float magnitude = Vector2.Distance(pos, node.transform.position);
+            float magnitude = Vector3.Distance(pos, node.transform.position);
             if (magnitude < closestMagnitude)
             {
                 closestMagnitude = magnitude;

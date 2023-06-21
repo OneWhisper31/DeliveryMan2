@@ -18,7 +18,7 @@ namespace FSM {
 
         public virtual Dictionary<string, IState> Transitions { get; set; } = new Dictionary<string, IState>();
 
-        private FiniteStateMachine _fsm;
+        protected FiniteStateMachine _fsm;
 
 
         public IState Configure(FiniteStateMachine fsm) {

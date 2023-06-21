@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace FSM
 {
@@ -10,10 +11,12 @@ namespace FSM
         CarIA carIA;
 
         [SerializeField] Rigidbody2D playerRb;
+        [SerializeField] CircleQuery query;
 
         private void Awake()
         {
             carIA = GetComponent<CarIA>();
+            query = GetComponent<CircleQuery>();
         }
 
         public override void UpdateLoop()
@@ -27,12 +30,19 @@ namespace FSM
 
         public override IState ProcessInput()
         {
-            Vector2 futurePos = (Vector2)playerRb.transform.position + playerRb.velocity;
 
-            if ((futurePos - (Vector2)transform.position).magnitude< 5 && Transitions.ContainsKey("OnCompleteDeliveryState"))
+            if ((playerRb.transform.position - transform.position).magnitude< 7 && Transitions.ContainsKey("OnCompleteDeliveryState"))
+            {
+                //IA2-P1/P2
+                /*if(query.Query().Select(x => (CarMovement)x)
+                             .Where(x => x != null)
+                             .Where(x => x.tag == "Player1")
+                             .Take(1)!=null)*/
+                UICounter.intance.StealScore(Player.Two);
+
                 return Transitions["OnCompleteDeliveryState"];
-
-                return this;
+            }
+            return this;
         }
     }
 }

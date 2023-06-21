@@ -39,7 +39,7 @@ namespace FSM {
                     var previousState = CurrentState;
                     var transitionParameters = CurrentState.Exit(nextState);
 
-                    Debug.Log("Exiting state '" + CurrentState.Name + "' to state '" + nextState.Name + "'.");
+                    //Debug.Log("Exiting state '" + CurrentState.Name + "' to state '" + nextState.Name + "'.");
                     
                     CurrentState = nextState;
                     CurrentState.Enter(previousState, transitionParameters);
@@ -77,7 +77,17 @@ namespace FSM {
 
             return this;
         }
-        
+        public FiniteStateMachine Reset()
+        {
+            foreach (var state in _allStates)
+            {
+                state.Transitions = new Dictionary<string, IState>();
+                state.HasStarted = false;
+            }
+
+            return this;
+        }
+
         public bool Active {
             get { return _isActive; }
             set {

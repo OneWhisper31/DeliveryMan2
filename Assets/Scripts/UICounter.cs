@@ -58,7 +58,8 @@ public class UICounter : MonoBehaviour
         public void AddSecs(int add){
             secondCounter+=add;
         }
-        public void AddScore(Player player=0){
+    public void AddScore(Player player = 0)
+    {
         switch (player)
         {
             case Player.One:
@@ -72,13 +73,37 @@ public class UICounter : MonoBehaviour
             default:
                 break;
         }
+    }
+    public void StealScore(Player thief = 0)
+    {
+        switch (thief)
+        {
+            case Player.One:
+                if (score2 <= 0) return;
+                score1++;
+                score2--;
+                scoreText1.SetText(score1.ToString());
+                scoreText2.SetText(score2.ToString());
+                break;
+            case Player.Two:
+                if (score1 <= 0) return;
+                score1--;
+                score2++;
+                scoreText1.SetText(score1.ToString());
+                scoreText2.SetText(score2.ToString());
+                break;
+            default:
+                break;
         }
-        public void SubstractSecs(int substract){
-            secondCounter-=substract;
-        }
-        public void SetScore(){
-            gameOverScoreText.SetText(score1.ToString());
-        }            
+    }
+    public void SubstractSecs(int substract)
+    {
+        secondCounter -= substract;
+    }
+    public void SetScore()
+    {
+        gameOverScoreText.SetText(score1.ToString());
+    }
 }
 public enum Player
 {

@@ -27,38 +27,39 @@ namespace FSM
         {
             base.Enter(from, transitionParameters);
 
-            if (carIA.delivers.Any(x => x.isActive == true))
+            if (carIA.delivers.Any(x => x.isActive))
             {
-                _path = TrackNewPath(transform.position,
                 //IA2-P1
-                carIA.delivers.Where(x => x.isActive == true)
-                .Aggregate(Tuple.Create(Vector3.zero, -1f), (x, y) =>
+                DeliverPoint deliver = 
+                carIA.delivers.Where(x => x.isActive)
+                              .OrderBy(x => (transform.position - x.transform.position).magnitude)
+                              .First();
+
+                Debug.Log(deliver.name);
+
+                _path = TrackNewPath(transform.position, deliver.transform.position);
+
+                foreach (var item in _path)
                 {
-                    float xMagnitude = (transform.position - x.Item1).magnitude;
-                    float yMagnitude = (transform.position - y.transform.position).magnitude;
-
-                    //Replace delivery for the closeone, if activated
-                    if (y.isActive == true)
-                        if (Physics2DExtension.InLineOfSight(transform.position, y.transform.position, carIA.wallLayer))
-                            if ((xMagnitude > yMagnitude) || x.Item2 == -1/*FirstTime*/)
-                                x = Tuple.Create(y.transform.position, yMagnitude);
-
-                    return x;
-                }).Item1);
+                    Debug.Log(item.name+" "+ item.locked);
+                    
+                }
                 dir = TrackNewTarget();
+
+                
             }
 
         }
 
         public override void UpdateLoop()
         {
-
+            
             if (_target != null)
                 dir = _target - (Vector2)transform.position;
 
             if (_path.Count > 0)
             {
-                if (dir.magnitude < 0.3f)
+                if (dir.magnitude < 3)
                 {
                     dir = TrackNewTarget();
                 }
@@ -69,23 +70,22 @@ namespace FSM
 
         public override IState ProcessInput()
         {
-            if (_path.Count <= 0 && dir.magnitude < 0.3f&& Transitions.ContainsKey("OnCompleteDeliveryState"))
+            if (_path.Count <= 0 && dir.magnitude < 3&& Transitions.ContainsKey("OnCompleteDeliveryState"))
                 return Transitions["OnCompleteDeliveryState"];
-            else if (carIA.delivers.All(x => x.isActive == false) && Transitions.ContainsKey("OnIdleState"))
-                return Transitions["OnIdleState"];
             
             return this;
         }
 
-        public List<Node> TrackNewPath(Vector2 start, Vector2 end)
+        public List<Node> TrackNewPath(Vector3 start, Vector3 end)
         {
             Node startNode = nodeGrid.GetStartingNode(start);
+            Node endNode = nodeGrid.GetStartingNode(end);
 
-            return _pathfinding.ThetaStar(startNode, nodeGrid.GetStartingNode(end),
-                Vector2.Distance(startNode.transform.position, transform.position) < 2f ?
+            return _pathfinding.ThetaStar(startNode, endNode,
+                Vector3.Distance(startNode.transform.position, transform.position) < 3f ?
                     true : false/*si esta cerca del nodo inicial lo evita*/);
         }
-        public Vector2 TrackNewTarget()
+        public Vector3 TrackNewTarget()
         {
             if (_path.Count <= 0)
                 return default;

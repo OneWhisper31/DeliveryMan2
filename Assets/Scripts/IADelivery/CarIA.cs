@@ -27,6 +27,8 @@ public class CarIA : MonoBehaviour
     public List<DeliverPoint> delivers = new List<DeliverPoint>();
     public LayerMask          wallLayer;
 
+    CircleQuery circleQuery;
+
     [Header("Variables Movimiento de la Moto")]
     public float driftFactor = 0.95f;
     public float accelerationFactor = 30;
@@ -42,6 +44,7 @@ public class CarIA : MonoBehaviour
 
     //IA2-P3
     FiniteStateMachine _fsm;
+
     #endregion
 
 
@@ -52,10 +55,15 @@ public class CarIA : MonoBehaviour
     void Start()
     {
         myRb = GetComponent<Rigidbody2D>();
-        PlanAndExecute();
+        circleQuery = GetComponent<CircleQuery>();
+
+        StartCoroutine(PlanAndExc());
     }
+    IEnumerator PlanAndExc() { yield return new WaitForSecondsRealtime(1f); PlanAndExecute(); }
     public  void PlanAndExecute()
     {
+        
+
         var actions = new List<GOAPAction>{
                                               new GOAPAction("Idle")
                                                  .Effect("hasPath", true)/*Could be seek, Steal or aStar*/
@@ -97,8 +105,14 @@ public class CarIA : MonoBehaviour
         from.values["complete"] = false;
 
         //StealState
-        from.values["isPlayerInFOV"] = 
-            Physics2DExtension.InFieldOfView(transform.position,player.position,viewRadiusPlayer, viewAnglePlayer, wallLayer);
+        //IA2-P1/P2
+            bool epa = circleQuery.Query()
+                       .Select(x => (CarMovement)x)
+                       .Where(x => x != null)
+                       .Where(x => Physics2DExtension.InLineOfSight(transform.position, x.transform.position, wallLayer))
+                       .Any(x => x != null);
+        Debug.Log(epa);
+        from.values["isPlayerInFOV"] = epa;
 
         //AStar || Seek
         from.values["isObjectiveInSight"] = 
@@ -201,7 +215,7 @@ public class CarIA : MonoBehaviour
     {
         float angle = Vector3.Angle(input, transform.up);
 
-        if (Mathf.Abs(angle) <= 20)
+        if (Mathf.Abs(angle) <= 10)
             steeringInput = 0;
         else
             steeringInput = angle * 0.02f;
@@ -210,6 +224,11 @@ public class CarIA : MonoBehaviour
 
         accelerationInput = Mathf.Max(Mathf.Abs(input.y*2),0.2f);
             
+    }
+    public void SetBrakeVector()
+    {
+        //steeringInput = 0;
+        accelerationInput = 0;
     }
 
     #endregion

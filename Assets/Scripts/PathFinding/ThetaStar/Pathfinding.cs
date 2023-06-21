@@ -42,36 +42,41 @@ public class Pathfinding
         while (frontier.Count > 0)
         {
             Node current = frontier.Dequeue();
-
-            if (current == goalNode)
+            if (current.locked == false)
             {
-                List<Node> path = new List<Node>();
-                while (current != startingNode)
-                {
-                    path.Add(current);
-                    current = cameFrom[current];
-                }
-                path.Add(startingNode);
-                path.Reverse();
 
-                return path;
-            }
+                if (current == goalNode)
+                {
+                    List<Node> path = new List<Node>();
+                    while (current != startingNode)
+                    {
+                        path.Add(current);
+                        current = cameFrom[current];
+                    }
+                    path.Add(startingNode);
+                    path.Reverse();
 
-            foreach (Node next in current.GetNeighbors())
-            {
-                int newCost = costSoFar[current] + next.cost;
-                float priority = newCost + Vector3.Distance(next.transform.position, goalNode.transform.position);
-                if (!costSoFar.ContainsKey(next))
-                {
-                    frontier.Enqueue(next, priority);
-                    cameFrom.Add(next, current);
-                    costSoFar.Add(next, newCost);
+                    return path;
                 }
-                else if (newCost < costSoFar[next])
+
+                foreach (Node next in current.GetNeighbors())
                 {
-                    frontier.Enqueue(next, priority);
-                    cameFrom[next] = current;
-                    costSoFar[next] = newCost;
+
+
+                    int newCost = costSoFar[current] + next.cost;
+                    float priority = newCost + Vector3.Distance(next.transform.position, goalNode.transform.position);
+                    if (!costSoFar.ContainsKey(next))
+                    {
+                        frontier.Enqueue(next, priority);
+                        cameFrom.Add(next, current);
+                        costSoFar.Add(next, newCost);
+                    }
+                    else if (newCost < costSoFar[next])
+                    {
+                        frontier.Enqueue(next, priority);
+                        cameFrom[next] = current;
+                        costSoFar[next] = newCost;
+                    }
                 }
             }
         }

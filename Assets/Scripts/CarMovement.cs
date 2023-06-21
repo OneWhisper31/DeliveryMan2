@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class CarMovement : MonoBehaviour
+public class CarMovement : MonoBehaviour, IGridEntity
 {
     public float driftFactor=0.95f;
     public float accelerationFactor = 30;
@@ -16,6 +17,14 @@ public class CarMovement : MonoBehaviour
     float velocityVsUp;
 
     Rigidbody2D rb;
+
+    //SpatialGrid
+    public event Action<IGridEntity> OnMove;
+    public Vector3 Position
+    {
+        get => transform.position;
+        set => transform.position = value;
+    }
 
     private void Start() {
         rb = GetComponent<Rigidbody2D>();

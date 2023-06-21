@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class DeliverPoint : MonoBehaviour
 {
@@ -17,6 +16,7 @@ public class DeliverPoint : MonoBehaviour
     [SerializeField] AudioClip _audioclip;
 
     bool _isActive;
+
     public bool isActive {
         get
         {
@@ -29,12 +29,11 @@ public class DeliverPoint : MonoBehaviour
         }
     }
 
-
     private void Start() {
         boxColl=GetComponent<Collider2D>();
         boxSprite=GetComponent<SpriteRenderer>();
         cooldown=Random.Range(20,41);
-        isActive = true;
+        isActive = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other) {

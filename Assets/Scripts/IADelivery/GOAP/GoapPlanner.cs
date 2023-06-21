@@ -50,10 +50,10 @@ public class GoapPlanner {
             Debug.Log(act);
         }
 
-        Debug.Log("WATCHDOG " + _watchdog);
+        //Debug.Log("WATCHDOG " + _watchdog);
 
         var plan = sequence.Skip(1).Select(x => x.generatingAction);
-        
+
         OnPlanCompleted?.Invoke(plan);
     }
 
