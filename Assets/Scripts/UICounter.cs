@@ -12,8 +12,6 @@ public class UICounter : MonoBehaviour
 
     public int initialSecs;
 
-    public TextMeshProUGUI gameOverScoreText;
-
     public TextMeshProUGUI timerText;
 
     public UnityEvent GameOver;
@@ -23,6 +21,9 @@ public class UICounter : MonoBehaviour
 
     public TextMeshProUGUI scoreText1;
     public TextMeshProUGUI scoreText2;
+    public TextMeshProUGUI gameOver1ScoreText;
+    public TextMeshProUGUI gameOver2ScoreText;
+    public GameObject winSing, loseSing;
 
     int score1;//ammount of orders delivers Player1
 
@@ -102,7 +103,11 @@ public class UICounter : MonoBehaviour
     }
     public void SetScore()
     {
-        gameOverScoreText.SetText(score1.ToString());
+        gameOver1ScoreText.SetText(score1.ToString());
+        gameOver2ScoreText.SetText(score2.ToString());
+
+        if (score1 > score2) winSing.SetActive(true);
+        else loseSing.SetActive(true);
     }
 }
 public enum Player

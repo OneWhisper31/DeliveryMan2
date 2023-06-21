@@ -65,7 +65,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 70
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -152,8 +152,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 359
-        height: 699
+        width: 358.8
+        height: 507
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,10 +171,10 @@ TextureImporter:
       name: personaje_principal_1
       rect:
         serializedVersion: 2
-        x: 359
+        x: 358
         y: 0
-        width: 359
-        height: 699
+        width: 358.8
+        height: 507
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -182,7 +182,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a34b1c1a991587e80800000000000000
+      spriteID: 78bb880376f63e44db266fec4c34c395
       internalID: -8180699002832833478
       vertices: []
       indices: 
@@ -192,10 +192,10 @@ TextureImporter:
       name: personaje_principal_2
       rect:
         serializedVersion: 2
-        x: 718
+        x: 716
         y: 0
-        width: 359
-        height: 699
+        width: 358.8
+        height: 507
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -203,7 +203,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 241bdaa6b5676b210800000000000000
+      spriteID: 12cd3c0fc29bebe46a0a01e96ebc3ca5
       internalID: 1348395273447911746
       vertices: []
       indices: 
@@ -213,10 +213,10 @@ TextureImporter:
       name: personaje_principal_3
       rect:
         serializedVersion: 2
-        x: 1077
+        x: 1074
         y: 0
-        width: 359
-        height: 699
+        width: 358.8
+        height: 507
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -224,7 +224,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f6120517d085ebae0800000000000000
+      spriteID: 841eda1e68fdf1b499653049cd38b6d9
       internalID: -1531690008500493969
       vertices: []
       indices: 
@@ -234,10 +234,10 @@ TextureImporter:
       name: personaje_principal_4
       rect:
         serializedVersion: 2
-        x: 1436
+        x: 1432
         y: 0
-        width: 359
-        height: 699
+        width: 358.8
+        height: 507
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -245,7 +245,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b826380b4b70ada00800000000000000
+      spriteID: 404da6f13f6232c4ab7666d94f138294
       internalID: 781945957939110539
       vertices: []
       indices: 

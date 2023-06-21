@@ -33,7 +33,7 @@ public class DeliverPoint : MonoBehaviour
         boxColl=GetComponent<Collider2D>();
         boxSprite=GetComponent<SpriteRenderer>();
         cooldown=Random.Range(20,41);
-        isActive = false;
+        isActive = Random.Range(0, 2)==0?false:true;
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
