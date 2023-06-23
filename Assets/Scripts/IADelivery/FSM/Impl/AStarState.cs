@@ -65,7 +65,7 @@ namespace FSM
                 }
             }
 
-            carIA.SetInputVector(dir.normalized);
+            carIA.SetInputVector(dir.normalized,_target);
         }
 
         public override IState ProcessInput()

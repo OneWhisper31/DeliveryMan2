@@ -31,7 +31,7 @@ namespace FSM
 
                 //Replace delivery for the closeone, if activated
                 if (y.isActive == true)
-                    if (Physics2DExtension.InLineOfSight(transform.position, y.transform.position, carIA.wallLayer))
+                    if (transform.position.CanPassThrough(y.transform.position,carIA.radius, carIA.wallLayer))
                         if ((xMagnitude > yMagnitude) || x.Item2 == -1/*FirstTime*/)
                         {
 
@@ -50,13 +50,13 @@ namespace FSM
 
             Vector2 desired = deliveryTarget - transform.position;
 
-            carIA.SetInputVector(desired.normalized);
+            carIA.SetInputVector(desired.normalized, deliveryTarget);
         }
 
         public override IState ProcessInput()
         {
 
-            if ((deliveryTarget - transform.position).magnitude < 3
+            if ((deliveryTarget - transform.position).magnitude < 5
                 && Transitions.ContainsKey("OnCompleteDeliveryState"))
                 return Transitions["OnCompleteDeliveryState"];
 

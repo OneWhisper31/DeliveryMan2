@@ -21,23 +21,23 @@ namespace FSM
         }
         public override IState ProcessInput()/*(carIA.player.transform.position-transform.position).magnitude*/
         {
-            bool InFieldOfView = Physics2DExtension.InFieldOfView(transform.position, carIA.player.transform.position,
-                                                 carIA.viewRadiusPlayer, carIA.viewAnglePlayer, carIA.wallLayer);
+            /*bool InFieldOfView = Physics2DExtension.InFieldOfView(transform.position, carIA.player.transform.position,
+                                                 carIA.viewRadiusPlayer, carIA.viewAnglePlayer, carIA.wallLayer);*/
 
             //IA2-P1
-            /*bool deliveryActive= carIA.delivers.Any(x => x.isActive);
+            bool deliveryActive= carIA.delivers.Any(x => x.isActive);
 
             bool InLineOfSight = deliveryActive ?
-                Physics2DExtension.InLineOfSight(transform.position, 
+                transform.position.InLineOfSight( 
                 carIA.delivers.Where(x=>x.isActive==true)
                               .OrderBy(x => (transform.position - x.transform.position).magnitude)
-                              .First().transform.position,carIA.wallLayer):false;*/
+                              .First().transform.position,carIA.wallLayer):false;
 
             if (Transitions.ContainsKey("OnStealState"))//&&InFieldOfView)                
             {
                 return Transitions["OnStealState"];
             }
-            else if (Transitions.ContainsKey("OnSeekState"))//&&InLineOfSight)
+            else if (Transitions.ContainsKey("OnSeekState")&&InLineOfSight)
             {
                 return Transitions["OnSeekState"];
             }

@@ -32,7 +32,7 @@ public class NodeGrid : MonoBehaviour
                 i = x  + y * width;
                 if (i < _nodes.Length)
                 {
-                    _grid[x, y] = Instantiate(prefab, new Vector2(transform.position.x + y * 7.5f, transform.position.y + x * 7.5f), transform.rotation, transform);
+                    _grid[x, y] = Instantiate(prefab, new Vector2(transform.position.x + y * 6, transform.position.y + x * 6), transform.rotation, transform);
                     _grid[x, y].Initialize(this, new Vector2Int(x, y));
                     _grid[x, y].name = "Node-" + i;
                     _nodes[i]= _grid[x, y];

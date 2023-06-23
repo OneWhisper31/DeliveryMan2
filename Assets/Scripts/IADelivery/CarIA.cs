@@ -23,9 +23,13 @@ public class CarIA : MonoBehaviour
     public float viewAnglePlayer;
 
     public Transform          player;
-    public Rigidbody2D        myRb;
+    public Transform          pivotCar;
+    public Rigidbody2D        rb;
     public List<DeliverPoint> delivers = new List<DeliverPoint>();
     public LayerMask          wallLayer;
+
+    [Tooltip("CarRadius")]
+    public float radius;
 
     CircleQuery circleQuery;
 
@@ -54,7 +58,7 @@ public class CarIA : MonoBehaviour
 
     void Start()
     {
-        myRb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         circleQuery = GetComponent<CircleQuery>();
 
         StartCoroutine(PlanAndExc());
@@ -62,7 +66,19 @@ public class CarIA : MonoBehaviour
     IEnumerator PlanAndExc() { yield return new WaitForSecondsRealtime(1f); PlanAndExecute(); }
     public  void PlanAndExecute()
     {
-        
+        //IA II - P1 PUEDE SERVIR PARA SALIR
+        /*var avaliablePoints = delivers.Where(x => x.isActive)
+                                      .Select(x=>Tuple.Create(x.transform,false))//False=Delivers || True=Player
+                                      .Concat(new Tuple<Transform, bool>[] { Tuple.Create(player.transform, true) })
+                                      .OrderBy(x => (transform.position - x.Item1.position).magnitude);*/
+        //IA II - P1/P2
+        var playerOnRangeAndSight = circleQuery.Query()
+                       .Select(x => (CarMovement)x)
+                       .Where(x => x != null)
+                       .Where(x => pivotCar.position.CanPassThrough(x.transform.position, radius, wallLayer));
+
+        var deliveryIsActive = delivers.Where(x => x.isActive == true).OrderBy(x => (pivotCar.position - x.transform.position).magnitude);
+        var deliveryLineOfSight = deliveryIsActive.Where(x => pivotCar.position.CanPassThrough(x.transform.position, radius, wallLayer));
 
         var actions = new List<GOAPAction>{
                                               new GOAPAction("Idle")
@@ -73,22 +89,33 @@ public class CarIA : MonoBehaviour
                                                  .Pre("hasPath", true)
                                                  .Pre("isPlayerInFOV",   true)
                                                  .Effect("objectiveAchieved", true)
+                                                 .Cost(//IA - P1 
+                                                  playerOnRangeAndSight.Any(x=>x==null)?1:
+                                                  playerOnRangeAndSight.Take(1)
+                                                  .Aggregate(1f,(x,y)=>(pivotCar.position - y.transform.position).magnitude)
+                                                  )
                                                  .LinkedState(stealState),
 
                                               new GOAPAction("Seek")
                                                  .Pre("hasPath", true)
+                                                 .Pre("isPlayerInFOV", false)
                                                  .Pre("isObjectiveInSight", true)
-                                                 .Pre("isPlayerInFOV",   false)
                                                  .Effect("objectiveAchieved",    true)
-                                                 .Cost(2)
+                                                 .Cost(//IA - P1
+                                                  deliveryLineOfSight.Take(1)
+                                                  .Aggregate(1f,(x,y)=>(pivotCar.position - y.transform.position).magnitude)
+                                                  )
                                                  .LinkedState(seekState),
 
                                               new GOAPAction("AStar")
                                                  .Pre("hasPath", true)
+                                                 .Pre("isPlayerInFOV", false)
                                                  .Pre("isObjectiveInSight",   false)
-                                                 .Pre("isPlayerInFOV",   false)
                                                  .Effect("objectiveAchieved", true)
-                                                 .Cost(2)
+                                                 .Cost(//IA - P1
+                                                  deliveryIsActive.Take(1)
+                                                  .Aggregate(1f,(x,y)=>(pivotCar.position - y.transform.position).magnitude)
+                                                  )
                                                  .LinkedState(AStarState),
 
                                               new GOAPAction("CompleteDelivery")
@@ -104,28 +131,15 @@ public class CarIA : MonoBehaviour
         from.values["objectiveAchieved"] = false;
         from.values["complete"] = false;
 
-        //StealState
-        //IA2-P1/P2
-            bool epa = circleQuery.Query()
-                       .Select(x => (CarMovement)x)
-                       .Where(x => x != null)
-                       .Where(x => Physics2DExtension.InLineOfSight(transform.position, x.transform.position, wallLayer))
-                       .Any(x => x != null);
-        Debug.Log(epa);
-        from.values["isPlayerInFOV"] = epa;
+        //StealState    || IA2 - P2
+        from.values["isPlayerInFOV"] = playerOnRangeAndSight.Count() > 0;
 
-        //AStar || Seek
-        from.values["isObjectiveInSight"] = 
-            //IA2 - TP1
-            delivers.Any(x => x.isActive == true && Physics2DExtension.InLineOfSight(transform.position, x.transform.position, wallLayer));
-
-
-                    /*.Any(x => x != null);*/
-
-                    /*.OrderBy(x =>(transform.position- x.transform.position).magnitude) Para el state
-                    .First();*/
-
-        
+        //AStar || Seek    || IA2 - P1
+        from.values["isObjectiveInSight"] = deliveryLineOfSight.Count()>0;
+        foreach (var item in deliveryLineOfSight)
+        {
+            Debug.Log(item.name);
+        }
 
         var to = new GOAPState();
         to.values["complete"] =             true;
@@ -167,7 +181,6 @@ public class CarIA : MonoBehaviour
     }
     void ApplyEngineForce()
     {
-        var rb = myRb;
 
         velocityVsUp = Vector2.Dot(transform.up, rb.velocity);
 
@@ -191,39 +204,36 @@ public class CarIA : MonoBehaviour
     {
 
         //Limit the car ability to turn when moving slowly
-        float minSpeedAllowTurning = (myRb.velocity.magnitude / 8);
+        float minSpeedAllowTurning = (rb.velocity.magnitude / 8);
         minSpeedAllowTurning = Mathf.Clamp01(minSpeedAllowTurning);
 
         //Update the rotation angle based on input
         rotationAngle -= steeringInput * turnFactor * minSpeedAllowTurning;
 
-        myRb.MoveRotation(rotationAngle);
+        rb.MoveRotation(rotationAngle);
     }
 
     void KillOrthogonalVelocity()
     {
-        var rb = myRb;
-
         Vector2 forwardVelocity = transform.up * Vector2.Dot(rb.velocity, transform.up);
         Vector2 rightVelocity = transform.right * Vector2.Dot(rb.velocity, transform.right);
 
-        rb.velocity = forwardVelocity+ rightVelocity * driftFactor;
+        rb.velocity = forwardVelocity + rightVelocity * driftFactor;
         //if player press space, the car drifts more
     }
 
-    public void SetInputVector(Vector2 input)
+    public void SetInputVector(Vector2 input, Vector3 target)
     {
-        float angle = Vector3.Angle(input, transform.up);
+        //steeringInput = (float)Math.Round(Vector2.Angle(input, transform.up) * 0.02f, 3, MidpointRounding.ToEven);
+        steeringInput = Mathf.Lerp(steeringInput, Mathf.Clamp(Vector2.SignedAngle(input, pivotCar.up), -1, 1),0.3f);
+        accelerationInput = Mathf.Max(Mathf.Abs(input.y * 2), 0.3f);
 
-        if (Mathf.Abs(angle) <= 10)
-            steeringInput = 0;
-        else
-            steeringInput = angle * 0.02f;
-
-        steeringInput = (float)Math.Round(steeringInput, 3,MidpointRounding.ToEven);
-
-        accelerationInput = Mathf.Max(Mathf.Abs(input.y*2),0.2f);
+        if (Physics2D.Raycast(pivotCar.position, pivotCar.up,2f,wallLayer))
+        {
             
+            accelerationInput = -0.2f;
+        }
+
     }
     public void SetBrakeVector()
     {
@@ -232,5 +242,33 @@ public class CarIA : MonoBehaviour
     }
 
     #endregion
+
+
+
+    #region DrawGizmos
+    /*
+        private void OnDrawGizmos()
+        {//first pregunte si any
+            Gizmos.color = Color.red;
+            var deliveryIsActive = delivers.Where(x => x.isActive == true).OrderBy(x => (transform.position - x.transform.position).magnitude);
+            var deliveryLineOfSight = deliveryIsActive.Where(x => transform.position.CanPassThrough(x.transform.position, radius, wallLayer));
+
+            foreach (var item in deliveryIsActive)
+            {
+                Gizmos.DrawLine(transform.position, item.transform.position);
+                Gizmos.DrawLine(transform.position + Vector3.right * radius, item.transform.position + Vector3.right * radius);
+                Gizmos.DrawLine(transform.position - Vector3.right * radius, item.transform.position - Vector3.right * radius);
+                Gizmos.DrawLine(transform.position + Vector3.up * radius, item.transform.position + Vector3.up * radius);
+                Gizmos.DrawLine(transform.position - Vector3.up * radius, item.transform.position - Vector3.up * radius);
+            }
+            Gizmos.color = Color.green;
+            foreach (var item in deliveryLineOfSight)
+            {
+                Gizmos.DrawLine(transform.position, item.transform.position);
+            }
+        }*/
+    #endregion
 }
+
+
 

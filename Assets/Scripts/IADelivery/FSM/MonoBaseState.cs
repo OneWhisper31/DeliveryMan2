@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,11 +32,20 @@ namespace FSM {
         public virtual void Enter(IState from, Dictionary<string, object> transitionParameters = null) {
             OnEnter?.Invoke(from, this);
             HasStarted = true;
+            StartCoroutine(Replan(10));
+        }
+        IEnumerator Replan(float sec)
+        {
+            yield return new WaitForSeconds(sec);
+            Debug.Log("REPLAN");
+            GetComponent<CarIA>().PlanAndExecute();
+            _fsm.Active = false;
         }
 
         public virtual Dictionary<string, object> Exit(IState to) {
             OnExit?.Invoke(this, to);
             HasStarted = false;
+            StopAllCoroutines();
             return null;
         }
 
